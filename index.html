@@ -10,7 +10,7 @@
 <meta data-k name="apple-mobile-web-app-title" content="Sinh nhật em">
 <meta data-k name="apple-mobile-web-app-capable" content="yes">
 <meta data-k name="mobile-web-app-capable" content="yes">
-<meta data-k name="apple-mobile-web-app-status-bar-style" content="default">
+<meta data-k name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title data-k>Chúc mừng sinh nhật em iu 22 tuổi</title>
 <meta data-k property="og:title" content="Chúc mừng sinh nhật em iu 22 tuổi">
 <meta data-k property="og:description" content="Một món quà nhỏ cho tuổi 22 🎂">
@@ -72,7 +72,7 @@ img{display:block;max-width:100%}
 #intro.open .box{animation-play-state:paused}
 
 /* ---------- hero ---------- */
-#hero{position:relative;height:100vh;height:100svh;min-height:560px;overflow:hidden;
+#hero{position:relative;height:100vh;height:100svh;min-height:320px;overflow:hidden;
   background:radial-gradient(90% 55% at 15% 8%,#ffd3e2 0%,transparent 60%),radial-gradient(80% 50% at 95% 30%,#fff0bf 0%,transparent 60%),radial-gradient(100% 60% at 50% 105%,#c9f3e3 0%,transparent 65%),#fff6f0}
 #gl{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .bokeh{position:absolute;border-radius:50%;filter:blur(1px);opacity:.55;animation:floaty 9s ease-in-out infinite}
@@ -80,7 +80,7 @@ img{display:block;max-width:100%}
 .hero-top{position:absolute;left:0;right:0;top:0;padding:calc(18px + var(--sat)) 16px 0;text-align:center;pointer-events:none}
 .hero-date{display:inline-block;font-family:'Baloo 2',Nunito,sans-serif;font-weight:800;font-size:28px;line-height:1;letter-spacing:.06em;color:#e0245e;text-shadow:0 2px 0 #fff,0 0 14px #fff,0 6px 16px #ff5e9466}
 .hero-sub{font-size:30px;color:var(--pink);margin-top:8px;line-height:1}
-.hero-name{font-size:clamp(46px,14vw,108px);font-weight:800;letter-spacing:-.01em;margin-top:2px;
+.hero-name{font-size:clamp(38px,min(14vw,11vh),108px);font-weight:800;letter-spacing:-.01em;margin-top:2px;
   background:linear-gradient(95deg,#d90f5a 8%,#f0306a 45%,#f2551d 92%);-webkit-background-clip:text;background-clip:text;color:transparent;
   filter:drop-shadow(0 3px 0 #fff) drop-shadow(0 8px 14px #c2185b44)}
 .hero-age{font-weight:800;font-size:17px;color:var(--ink2)}
@@ -235,8 +235,10 @@ body.editing .catframe{border-radius:50%}
 #lightbox img{max-height:72vh;border-radius:14px;box-shadow:0 20px 60px -20px #000}
 #lightbox .cap{color:#fff;font-family:'Dancing Script';font-size:28px;text-align:center}
 #lightbox .x{position:absolute;top:calc(12px + var(--sat));right:12px}
-#toast{position:fixed;left:50%;top:calc(14px + var(--sat));transform:translate(-50%,-140%);z-index:80;background:#5b3346;color:#fff;font-weight:700;font-size:14px;padding:10px 16px;border-radius:14px;transition:transform .35s;max-width:90vw;text-align:center}
-#toast.on{transform:translate(-50%,0)}
+#toast{position:fixed;left:50%;top:calc(14px + var(--sat));transform:translate(-50%,calc(-100% - 24px - var(--sat)));visibility:hidden;z-index:80;background:#5b3346;color:#fff;font-weight:700;font-size:14px;padding:10px 16px;border-radius:14px;transition:transform .35s,visibility .35s;max-width:90vw;text-align:center}
+#toast.on{transform:translate(-50%,0);visibility:visible}
+/* opened from the home screen: the page runs under the clock/battery, so give their white text a soft backdrop */
+@media (display-mode:standalone){body::before{content:"";position:fixed;left:0;right:0;top:0;height:calc(var(--sat) + 10px);z-index:90;pointer-events:none;background:linear-gradient(rgba(150,50,90,.32),rgba(150,50,90,0))}}
 #kit{position:fixed;left:0;top:0;pointer-events:none;opacity:0;will-change:transform,opacity}
 #kitHit{position:fixed;left:0;top:0;width:60px;height:66px;border-radius:45%;display:none;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 #blow:disabled{opacity:.7;box-shadow:2px 2px 0 #ef7fa2}
@@ -254,6 +256,7 @@ body.editing .catframe{border-radius:50%}
   .modal{align-items:center}
   .sheet-card{border-radius:26px}
 }
+@media (orientation:landscape) and (max-height:520px){.hero-top{padding-top:calc(8px + var(--sat))}.hero-date{font-size:18px}.hero-sub{font-size:21px;margin-top:3px}.hero-age{font-size:13px}.hero-age b{font-size:16px}.countdown{font-size:12px;min-height:16px;margin-top:2px}#blow{min-height:40px;font-size:16px}.scroll-cue{padding:0 14px;font-size:16px}}
 @media (max-width:430px){.celebrate{top:calc(29.5% + var(--sat))}.celebrate span{max-width:95%;font-size:14.5px;padding:7px 12px;white-space:nowrap}}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;transition-duration:.01s!important}}
 </style>
@@ -1320,14 +1323,23 @@ function seq(s,paw,kM,W0,W1){
 /* ================= render loop ================= */
 var visible=true,rafOn=false,lastT=now();
 if('IntersectionObserver' in window)new IntersectionObserver(function(es){visible=es[0].isIntersecting;if(visible&&!rafOn)kick()}).observe(cv);
+/* the observer can miss a change (scroll restored on reload while the page is locked): re-check by geometry */
+function onScreen(){var r=cv.getBoundingClientRect();return r.bottom>0&&r.top<innerHeight}
+setInterval(function(){if(!rafOn&&!document.hidden&&onScreen()){visible=true;kick();}},1000);
 document.addEventListener('visibilitychange',function(){if(!document.hidden&&!rafOn)kick()});
 function kick(){rafOn=true;lastT=now();requestAnimationFrame(frame)}
 var LIGHT=nrm([0.45,0.95,0.7]),FOG=[1.0,0.95,0.95];
+var bandT=0.25,bandB=0.88,bandAt=-9,heroTop=document.querySelector('.hero-top'),heroCtl=document.querySelector('.hero-bottom .controls'),celeb=$('celebrate');
+function measureBand(t){bandAt=t;var r=cv.getBoundingClientRect(),h=Math.max(1,r.height),a=heroTop.getBoundingClientRect(),b=heroCtl.getBoundingClientRect();
+  var top=(a.bottom-r.top+4)/h,bot=(b.top-r.top-4)/h;if(!(bot-top>0.3)){var c=(top+bot)/2;top=c-0.15;bot=c+0.15;}bandT=Math.max(0,top);bandB=Math.min(1,bot);
+  celeb.style.top=(bandT*100).toFixed(1)+'%';}
+addEventListener('resize',function(){bandAt=-9});
 function frame(){
   if(!visible||document.hidden){rafOn=false;return}
   var t=now(),dt=Math.min(0.05,t-lastT);furPerf(t-lastT);lastT=t;
   if(cv.width!==Math.round(cv.getBoundingClientRect().width*DPR))resize();
-  var asp=W_/H_,port=asp<0.85,fov=(port?52:40)*PI/180,tn=Math.tan(fov/2),el=t-D.t0,sp_=(window.__qtSeqSpeed||1);
+  if(t-bandAt>1)measureBand(t);var fB=Math.max(0.3,bandB-bandT),cyB=1-(bandT+bandB);
+  var asp=W_/H_,port=asp<0.85,fov=(port?52:40)*PI/180,tn=Math.tan(fov/2),tnV=tn*fB,el=t-D.t0,sp_=(window.__qtSeqSpeed||1);
   /* --- director updates --- */
   var catDone=stepWalker(cat,t,dt),kitDone=stepWalker(kit,t,dt),sq=null;
   var kM=M(T(kit.x,0,kit.z),RY(kit.yaw));catSpeed(cat,dt);catSpeed(kit,dt);
@@ -1353,10 +1365,10 @@ function frame(){
   boardNow=boardMat(cakeH,t);cakeNow=M(boardNow,CAKE_ON_BOARD);
   /* --- camera --- */
   var P;
-  if(cam.mode==='cake')P={tgt:[1.3,port?1.62:1.05,0.3],yaw:0.12,pitch:0.5,dist:Math.max(1.5/tn,1.72/(tn*asp))};
-  else if(cam.mode==='present')P={tgt:[cat.x+0.6,port?2.4:1.9,cat.z+1.1],yaw:0.06,pitch:0.26,dist:Math.max(2.35/tn,2.0/(tn*asp))};
-  else if(cam.mode==='party')P={tgt:[0.2,port?2.35:1.45,1.8],yaw:0.0,pitch:0.2,dist:Math.max(2.2/tn,2.1/(tn*asp))};
-  else P={tgt:[0.15,port?2.25:1.85,0.2],yaw:0,pitch:0.24,dist:Math.min(Math.max(3.05/tn,2.85/(tn*asp)),port?15:13)};
+  if(cam.mode==='cake')P={tgt:[1.3,1.12,0.3],yaw:0.12,pitch:0.5,dist:Math.max(1.5/tnV,1.72/(tn*asp))};
+  else if(cam.mode==='present')P={tgt:[cat.x+0.6,1.95,cat.z+1.1],yaw:0.06,pitch:0.26,dist:Math.max(2.35/tnV,2.0/(tn*asp))};
+  else if(cam.mode==='party')P={tgt:[0.2,1.5,1.8],yaw:0.0,pitch:0.2,dist:Math.max(2.2/tnV,2.1/(tn*asp))};
+  else P={tgt:[0.15,1.9,0.2],yaw:0,pitch:0.24,dist:Math.min(Math.max(3.05/tnV,2.85/(tn*asp)),port?17:15)};
   if(!started){P.yaw=-0.9+Math.sin(t*0.3)*0.05;P.pitch=0.45;}
   var idle=t-lastInteract>5;if(idle&&started){var Aw=cam.mode==='wide'?0.45:0.15;cam.yawOT+=(Aw*Math.sin(t*0.16)-cam.yawOT)*0.006;}
   var k=1-Math.pow(0.0015,dt);
@@ -1364,7 +1376,7 @@ function frame(){
   cam.pan[0]+=(cam.panT[0]-cam.pan[0])*k*2;cam.pan[1]+=(cam.panT[1]-cam.pan[1])*k*2;
   var cy=Math.cos(cam.yaw),sy=Math.sin(cam.yaw),tg=[cam.tgt[0]+cam.pan[0]*cy,cam.tgt[1]+cam.pan[1],cam.tgt[2]-cam.pan[0]*sy];
   var eye=[tg[0]+cam.dist*sy*Math.cos(cam.pitch),tg[1]+cam.dist*Math.sin(cam.pitch),tg[2]+cam.dist*cy*Math.cos(cam.pitch)];
-  var V=lookAt(eye,tg,[0,1,0]);VP=mul(persp(fov,asp,0.1,60),V);var camR=[V[0],V[4],V[8]],camU=[V[1],V[5],V[9]];
+  var V=lookAt(eye,tg,[0,1,0]);VP=mul(T(0,cyB,0),mul(persp(fov,asp,0.1,60),V));var camR=[V[0],V[4],V[8]],camU=[V[1],V[5],V[9]];
   E.begin(cv.width,cv.height,VP,eye,LIGHT,FOG);
   E.draw(G.world,I4());E.draw(G.board,boardNow);E.draw(G.boardTop,boardNow,null,texBoard);E.draw(G.cake,cakeNow);E.draw(G.cakeTop,cakeNow,null,texTop);
   /* --- main cat: skinned body, IK legs --- */
@@ -1446,7 +1458,7 @@ function frame(){
   requestAnimationFrame(frame);
 }
 kick();setBtn();
-return {intro:function(){started=true;resetView();lastInteract=now();setTimeout(function(){if(D.st==='pre')go('lighting');},900);},state:function(){return D.st}};
+return {intro:function(){started=true;visible=true;if(!rafOn)kick();resetView();lastInteract=now();setTimeout(function(){if(D.st==='pre')go('lighting');},900);},state:function(){return D.st}};
 }
 
 /* ============ portrait & gallery ============ */
